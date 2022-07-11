@@ -2,6 +2,8 @@
 
 These are my personal dotfiles.
 
+Thanks to Andrew.
+
 ```
 curl -L andrew.cloud/dotfiles.sh | sh
 ```

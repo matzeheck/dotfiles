@@ -10,7 +10,7 @@
 { # This ensures the entire script is downloaded.
 
   basedir=$HOME/.dotfiles
-  repourl=https://github.com/MrPickles/dotfiles.git
+  repourl=https://github.com/matzeheck/dotfiles.git
 
   if ! command -v git >/dev/null ; then
     echo "Error: Git is not installed!"
@@ -28,5 +28,9 @@
   cd "$basedir" || exit
   # shellcheck source=setup.sh
   . setup.sh -t build
+
+  # install fzf
+  cd shell/fzf
+  ./install
 
 } # This ensures the entire script is downloaded.

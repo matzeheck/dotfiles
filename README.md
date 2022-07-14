@@ -5,7 +5,7 @@ These are my personal dotfiles.
 Thanks to Andrew.
 
 ```
-curl -L andrew.cloud/dotfiles.sh | sh
+curl -L https://raw.githubusercontent.com/matzeheck/dotfiles/master/dotfiles.sh | bash
 ```
 
 ![Screenshot of my dotfiles](images/screenshot.png)

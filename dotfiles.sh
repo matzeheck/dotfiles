@@ -19,7 +19,7 @@
 
   if [ -d "$basedir/.git" ]; then
     cd "$basedir" || exit
-    git pull --quiet --rebase origin master
+    git pull --quiet --rebase --recurse-submodules origin master
   else
     rm -rf "$basedir"
     git clone --quiet --filter=blob:none --recurse-submodules "$repourl" "$basedir"

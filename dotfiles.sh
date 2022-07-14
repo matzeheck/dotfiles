@@ -22,7 +22,7 @@
     git pull --quiet --rebase origin master
   else
     rm -rf "$basedir"
-    git clone --quiet --filter=blob:none "$repourl" "$basedir"
+    git clone --quiet --filter=blob:none --recurse-submodules "$repourl" "$basedir"
   fi
 
   cd "$basedir" || exit

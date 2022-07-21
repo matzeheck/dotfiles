@@ -157,6 +157,13 @@ install_zsh_extras() {
       https://github.com/zdharma-continuum/fast-syntax-highlighting.git \
       "${fsh_path}"
   fi
+  # conda-zsh-completion
+  czc_path=${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/conda-zsh-completion
+  if [[ ! -d ${czc_path} ]]; then
+    git clone --filter=blob:none \
+      https://github.com/esc/conda-zsh-completion \
+      "${czc_path}"
+  fi
 }
 
 install_optional_extras() {

@@ -35,7 +35,12 @@ plugins=(
   fd
   ripgrep
   fast-syntax-highlighting
+  systemd
+  terraform
+  virtualenv
+  conda-zsh-completion
 )
+autoload -U compinit && compinit
 
 # Returns whether the given command is executable or aliased.
 _has() {
@@ -162,6 +167,12 @@ for fzf_path in "${fzf_paths[@]}"; do
   fi
 done
 
+# ls or exa after path change
+function chpwd() {
+  emulate -L zsh
+  exa -l
+}
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
@@ -169,3 +180,21 @@ done
 if [[ -f ~/.zshrc.local ]]; then
   source ~/.zshrc.local
 fi
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/bsi/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/bsi/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/bsi/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/bsi/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+

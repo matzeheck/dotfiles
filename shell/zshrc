@@ -39,6 +39,7 @@ plugins=(
   terraform
   virtualenv
   conda-zsh-completion
+  zsh-autosuggestions
 )
 autoload -U compinit && compinit
 
@@ -148,7 +149,9 @@ source $ZSH/oh-my-zsh.sh
 # Alias `exa` as default `ls` command (if available).
 # This must come after OMZ. (The library overwrites this alias.)
 if _has exa; then
-  alias ls="exa"
+  alias ls="exa --icons"
+  alias ll="exa -lh --icons --git"
+  alias la="exa -lah --icons --git"
 fi
 
 # Source fzf scripts via via local installation.
@@ -170,7 +173,7 @@ done
 # ls or exa after path change
 function chpwd() {
   emulate -L zsh
-  exa -l
+  exa -lh --icons --git
 }
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
@@ -182,6 +185,19 @@ if [[ -f ~/.zshrc.local ]]; then
 fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# conda-zsh config
+# To activate the completion cache for packages
+zstyle ':completion::complete:*' use-cache 1
+#
+# To display subcommand completion in groups
+#zstyle ":conda_zsh_completion:*" use-groups true
+#
+# To display unnamed environments and prefixes of environments
+zstyle ":conda_zsh_completion:*" show-unnamed true
+#
+# To display environments autocompletion sorted in creation order
+zstyle ":conda_zsh_completion:*" sort-envs-by-time true
+
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!

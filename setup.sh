@@ -158,11 +158,18 @@ install_zsh_extras() {
       "${fsh_path}"
   fi
   # conda-zsh-completion
-  czc_path=${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/conda-zsh-completion
+  czc_path=${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/conda-zsh-completion
   if [[ ! -d ${czc_path} ]]; then
     git clone --filter=blob:none \
       https://github.com/esc/conda-zsh-completion \
       "${czc_path}"
+  fi
+  # zsh autosuggestion
+  zas_path=${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+  if [[ ! -d ${zas_path} ]]; then
+    git clone --filter=blob:none \
+      https://github.com/zsh-users/zsh-autosuggestions \
+      "${zas_path}"
   fi
 }
 

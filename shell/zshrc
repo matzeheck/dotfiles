@@ -32,9 +32,9 @@ plugins=(
   colored-man-pages
   vi-mode
   git-auto-fetch
+  fast-syntax-highlighting
   fd
   ripgrep
-  fast-syntax-highlighting
   systemd
   terraform
   virtualenv
@@ -117,24 +117,24 @@ if _has fzf; then
   if _has fd; then
     # Use fd for fzf.
     FZF_DEFAULT_COMMAND='fd --type f --follow --hidden'
-    FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
     # Use fd for fzf directory search.
-    FZF_ALT_C_COMMAND='fd --type d --color never'
+    export FZF_ALT_C_COMMAND='fd --type d --color never'
   fi
 
   # Display source tree and file preview for CTRL-T and ALT-C.
   if _has tree; then
     # Show subdir tree for directories.
-    FZF_ALT_C_OPTS="--preview '(exa --tree --color=always {} || tree -C {}) | head -200'"
+    export FZF_ALT_C_OPTS="--preview '(exa --tree --color=always {} || tree -C {}) | head -200'"
   fi
 
   # Bind alt-j/k/d/u to moving the preview window for fzf.
-  FZF_DEFAULT_OPTS="--bind alt-k:preview-up,alt-j:preview-down,alt-u:preview-page-up,alt-d:preview-page-down"
+  export FZF_DEFAULT_OPTS="--bind alt-k:preview-up,alt-j:preview-down,alt-u:preview-page-up,alt-d:preview-page-down"
 
   # Show previews for files and directories.
   # Having `bat` or `highlight` (or any of the other binaries below) installed
   # enables syntax highlighting.
-  FZF_CTRL_T_OPTS="--preview '(bat --style=numbers --color=always {} || highlight -O ansi -l {} || coderay {} || rougify {} || cat {}) 2> /dev/null | head -200'"
+  export FZF_CTRL_T_OPTS="--preview '(bat --style=numbers --color=always {} || highlight -O ansi -l {} || coderay {} || rougify {} || cat {}) 2> /dev/null | head -200'"
 
   # Some basic fzf-tab configs.
   plugins+=(fzf-tab)
@@ -142,6 +142,8 @@ if _has fzf; then
   zstyle ':completion:*:descriptions' format '[%d]'
   zstyle ':fzf-tab:*' switch-group ',' '.'
 fi
+
+#fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 
 # Source Oh-My-ZSH. All theme and plugin configs must come beforehand. This may have side-effects.
 source $ZSH/oh-my-zsh.sh
@@ -154,7 +156,7 @@ if _has exa; then
   alias la="exa -lah --icons --git"
 fi
 
-# Source fzf scripts via via local installation.
+# Source fzf scripts via local installation.
 # OMZ overwrites some of these scripts, so this must come afterwards.
 fzf_paths=(
   "${HOME}/.vim/plugged/fzf"
@@ -190,7 +192,7 @@ fi
 zstyle ':completion::complete:*' use-cache 1
 #
 # To display subcommand completion in groups
-#zstyle ":conda_zsh_completion:*" use-groups true
+zstyle ":conda_zsh_completion:*" use-groups true
 #
 # To display unnamed environments and prefixes of environments
 zstyle ":conda_zsh_completion:*" show-unnamed true
@@ -198,6 +200,8 @@ zstyle ":conda_zsh_completion:*" show-unnamed true
 # To display environments autocompletion sorted in creation order
 zstyle ":conda_zsh_completion:*" sort-envs-by-time true
 
+# zsh-autosuggestions
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=4'
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!

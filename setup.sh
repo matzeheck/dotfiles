@@ -7,7 +7,7 @@
 
 usage="Usage: $0 [-h] [-t <build|clean|shellcheck>]"
 BUILD=true
-INTERACTIVE=true
+INTERACTIVE=
 
 while getopts :ht: option; do
   case $option in
@@ -176,10 +176,16 @@ install_zsh_extras() {
 install_deb_file_from_url() {
    TEMP_DEB="$(mktemp)" &&
    wget -O "$TEMP_DEB" $1 &&
-   sudo apt isntall "$TEMP_DEB"
+   sudo dpkg -i "$TEMP_DEB"
+   sudo apt install -f
    rm -f "$TEMP_DEB"
 }
 
+get_latest_git_release_url() {
+  local git_url=$(curl -s https://api.github.com/repos/$1/$2/releases/latest \
+  | jq -r ".assets[] | select(.name | contains(\"amd64.deb\")) | select(.name | contains(\"musl\") | not) | .browser_download_url")
+  echo $git_url
+}
 
 install_optional_extras() {
   platform=$(uname);
@@ -189,18 +195,25 @@ install_optional_extras() {
     if [[ -f /etc/debian_version ]]; then
       # https://askubuntu.com/a/1300824
       
-      # get current version of exa 
-      exa_url=curl -s https://api.github.com/repos/dandavison/delta/releases/latest | jq -r ".assets[] | select(.name | contains(\"amd64.deb\")) | select(.name | contains(\"musl\") | not) | .browser_download_url"
-      install_deb_file_from_url $exa_url
+      # get current version of git-delta 
+      gitdelta_url=$(get_latest_git_release_url dandavison delta)
+      install_deb_file_from_url $gitdelta_url
       
+      # ripgrep
+      rg_url=$(get_latest_git_release_url BurntSushi ripgrep)
+      install_deb_file_from_url $rg_url
+      
+      # fd 
+      fd_url=$(get_latest_git_release_url sharkdp fd)
+      install_deb_file_from_url $fd_url
+      
+      # bat
+      bat_url=$(get_latest_git_release_url sharkdp bat)
+      install_deb_file_from_url $bat_url
+      
+      # exa
+      exa_url=$(curl -s https://api.github.com/repos/ogham/exa/releases/latest | jq -r ".assets[] | select(.name | contains(\"linux-x86_64\")) | select(.name | contains(\"musl\") | not) | .browser_download_url")
 
-      # get current version of delta
-      
-      
-      
-      
-      #sudo apt-get -y -o Dpkg::Options::="--force-overwrite" install ripgrep bat fd-find neovim
-      #echo "Please install exa and git-delta yourself."
     else
       echo "Unsupported OS. Install extras yourself... ¯\_(ツ)_/¯"
     fi
@@ -269,6 +282,7 @@ if [[ $BUILD ]]; then
   # Install zsh (if not available) and oh-my-zsh and p10k.
   install_zsh
   install_zsh_extras
+  install_optional_extras
   if ! [[ $INTERACTIVE ]]; then
     install_optional_extras
   fi

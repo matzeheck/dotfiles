@@ -7,7 +7,7 @@
 
 usage="Usage: $0 [-h] [-t <build|clean|shellcheck>]"
 BUILD=true
-INTERACTIVE=
+INTERACTIVE=true
 
 while getopts :ht: option; do
   case $option in
@@ -173,6 +173,14 @@ install_zsh_extras() {
   fi
 }
 
+install_deb_file_from_url() {
+   TEMP_DEB="$(mktemp)" &&
+   wget -O "$TEMP_DEB" $1 &&
+   sudo apt isntall "$TEMP_DEB"
+   rm -f "$TEMP_DEB"
+}
+
+
 install_optional_extras() {
   platform=$(uname);
   if [[ $platform == 'Darwin' ]]; then
@@ -180,8 +188,19 @@ install_optional_extras() {
   elif [[ $platform == 'Linux' ]]; then
     if [[ -f /etc/debian_version ]]; then
       # https://askubuntu.com/a/1300824
-      sudo apt-get -y -o Dpkg::Options::="--force-overwrite" install ripgrep bat fd-find neovim
-      echo "Please install exa and git-delta yourself."
+      
+      # get current version of exa 
+      exa_url=curl -s https://api.github.com/repos/dandavison/delta/releases/latest | jq -r ".assets[] | select(.name | contains(\"amd64.deb\")) | select(.name | contains(\"musl\") | not) | .browser_download_url"
+      install_deb_file_from_url $exa_url
+      
+
+      # get current version of delta
+      
+      
+      
+      
+      #sudo apt-get -y -o Dpkg::Options::="--force-overwrite" install ripgrep bat fd-find neovim
+      #echo "Please install exa and git-delta yourself."
     else
       echo "Unsupported OS. Install extras yourself... ¯\_(ツ)_/¯"
     fi

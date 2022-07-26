@@ -181,6 +181,20 @@ install_deb_file_from_url() {
    rm -f "$TEMP_DEB"
 }
 
+install_exa() {
+   local TEMP_ZIP="$(mktemp --suffix=.zip)"
+   local TEMP_DIR="$(mktemp -d)"
+   wget -O "$TEMP_ZIP" $1
+   unzip "${TEMP_ZIP}" -d "${TEMP_DIR}/exa"
+   
+   mkdir -p ~/.local/bin/ && cp "${TEMP_DIR}/exa/bin/exa" ~/.local/bin/
+   sudo cp "${TEMP_DIR}/exa/man/exa.1" /usr/share/man/man1/  
+   sudo cp "${TEMP_DIR}/exa/man/exa_colors.5" /usr/share/man/man1/
+   sudo cp "${TEMP_DIR}/exa/completions/exa.zsh" /usr/local/share/zsh/site-functions/
+   rm -f "$TEMP_ZIP"
+   rm -rf "$TEMP_DIR"
+}
+
 get_latest_git_release_url() {
   local git_url=$(curl -s https://api.github.com/repos/$1/$2/releases/latest \
   | jq -r ".assets[] | select(.name | contains(\"amd64.deb\")) | select(.name | contains(\"musl\") | not) | .browser_download_url")
@@ -213,7 +227,7 @@ install_optional_extras() {
       
       # exa
       exa_url=$(curl -s https://api.github.com/repos/ogham/exa/releases/latest | jq -r ".assets[] | select(.name | contains(\"linux-x86_64\")) | select(.name | contains(\"musl\") | not) | .browser_download_url")
-
+      install_exa $exa_url
     else
       echo "Unsupported OS. Install extras yourself... ¯\_(ツ)_/¯"
     fi

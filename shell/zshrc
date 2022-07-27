@@ -143,8 +143,6 @@ if _has fzf; then
   zstyle ':fzf-tab:*' switch-group ',' '.'
 fi
 
-#fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
-
 # Source Oh-My-ZSH. All theme and plugin configs must come beforehand. This may have side-effects.
 source $ZSH/oh-my-zsh.sh
 
